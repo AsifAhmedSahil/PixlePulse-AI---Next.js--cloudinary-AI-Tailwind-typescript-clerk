@@ -15,7 +15,7 @@ cloudinary.config({
 interface cloudinaryUploadResult {
   public_id: string;
   bytes:number;
-  duration?:number;
+  duration?:string;
   [key: string]: any;
 }
 
@@ -32,9 +32,9 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = (formData.get("file") as File) || null;
-    const title = (formData.get("title") as String);
-    const description = (formData.get("description") as String);
-    const originalSize = (formData.get("originalSize") as String);
+    const title = (formData.get("title") as string);
+    const description = (formData.get("description") as string);
+    const originalSize = (formData.get("originalSize") as string);
     if(!file){
         return NextResponse.json({error:"File not found"},{status:400})
     }
@@ -62,10 +62,28 @@ export async function POST(request: NextRequest) {
         }
     )
 
-    return NextResponse.json({publicId: result.public_id},{status:200})
+    const video = await prisma.video.create({
+        data:{
+            title,
+            description,
+            publicId: result.public_id,
+            originalSize:originalSize,
+            compressedSize: String(result.bytes),
+            //! Here duration is something problemetic ---> type number not working & model Float not working 
+            duration: result.duration || "0"
+
+        }
+    })
+
+    return NextResponse.json(video)
+
+    
     
   } catch (error) {
     console.log("upload image error: ",error)
     return NextResponse.json({error:"upload image error"},{status:500})
+  } finally {
+    await prisma.$disconnect()
+    
   }
 }
