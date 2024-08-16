@@ -70,12 +70,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
     setPreviewError(true);
   };
 
-  // <Image
-  //   src={getThumbnailUrl(video.publicId)} // Use a valid image URL
-  //   alt="Test Image"
-  //   width={800}
-  //   height={600}
-  // />
+  
   return (
     <div
       className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300"
