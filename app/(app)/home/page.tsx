@@ -1,8 +1,9 @@
+import VideoCard from '@/components/VideoCard'
 import React from 'react'
 
 const Home = () => {
   return (
-    <div>home</div>
+    <VideoCard/>
   )
 }
 
